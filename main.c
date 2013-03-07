@@ -18,13 +18,11 @@ int main(void)
 {
     //Setup the clock
     cli();          //Disable global interrupts
-#if 0
-    TCCR1B |= 1<<CS11 | 1<<CS10;  //Divide by 64
-#endif
-    TCCR1B |= 1<<4 | 1<<2;  //Divide by 1024
-    OCR1A = 15625;      //Count 15625 cycles for 1 second interrupt
-    TCCR1B |= 1<<WGM12;       //Put Timer/Counter1 in CTC mode
-    TIMSK1 |= 1<<OCIE1A;        //enable timer compare interrupt
+
+    TCCR1B |= ((1<<CS12) | (1<<CS10));  //Divide by 1024
+    OCR1A = 15624;      //Count 15625 cycles for 1 second interrupt
+    TCCR1B |= (1<<WGM12);       //Put Timer/Counter1 in CTC mode
+    TIMSK1 |= (1<<OCIE1A);        //enable timer compare interrupt
     sei();            //Enable global interrupts
     
     //Setup the I/O for the LED
@@ -36,5 +34,5 @@ int main(void)
 
 ISR(TIMER1_COMPA_vect)      //Interrupt Service Routine
 {
-    PORTD ^= (1<<0);      //Use xor to toggle the LED
+	digitalWrite(2, !digitalRead(2));
 }
